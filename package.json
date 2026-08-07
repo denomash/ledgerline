@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev:api": "pnpm --filter @ledgerline/api dev",
-    "dev:web": "pnpm --filter @ledgerline/web dev",
+    "dev:ui": "pnpm --filter @ledgerline/ui dev",
     "build": "pnpm -r build",
     "lint": "eslint .",
     "format": "prettier --write .",
