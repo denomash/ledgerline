@@ -1,4 +1,5 @@
 import "dotenv/config";
+import type { AuthPluginOptions } from "@ledgerline/authentication";
 
 function required(name: string): string {
   const value = process.env[name];
@@ -11,4 +12,6 @@ function required(name: string): string {
 export const env = {
   port: Number(process.env.PORT ?? 4000),
   databaseUrl: required("DATABASE_URL"),
+  jwtSecret: required("JWT_SECRET"),
+  jwtExpiresIn: (process.env.JWT_EXPIRES_IN ?? "7d") as AuthPluginOptions["jwtExpiresIn"],
 };

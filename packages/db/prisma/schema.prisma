@@ -7,4 +7,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Models land in Phase 1 (User, Group, Membership) and Phase 2 (Platform, LedgerEntry, Holding).
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?  @unique
+  passwordHash String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships Membership[]
+
+  @@map("users")
+}
+
+// Every account is a Group. Signup creates a Group of one with the creator
+// as ADMIN; it doubles as personal tracking until/unless more members join.
+model Group {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships Membership[]
+
+  @@map("groups")
+}
+
+enum MembershipRole {
+  MEMBER
+  ADMIN
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INVITED
+}
+
+model Membership {
+  id       String           @id @default(cuid())
+  userId   String
+  groupId  String
+  role     MembershipRole   @default(MEMBER)
+  status   MembershipStatus @default(ACTIVE)
+  joinedAt DateTime         @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
+  @@index([groupId])
+  @@map("memberships")
+}
+
+// Platform, LedgerEntry, Holding land in Phase 2.
