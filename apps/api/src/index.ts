@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cookie from "@fastify/cookie";
 import { authPlugin } from "@ledgerline/authentication";
+import { groupsPlugin } from "@ledgerline/groups";
 import { logger } from "@ledgerline/shared";
 import { env } from "./config/env.js";
 
@@ -17,6 +18,7 @@ app.get("/health", async () => ({ status: "ok" }));
 
 await app.register(cookie);
 await app.register(authPlugin, { jwtSecret: env.jwtSecret, jwtExpiresIn: env.jwtExpiresIn });
+await app.register(groupsPlugin);
 
 app.listen({ port: env.port, host: "0.0.0.0" }).catch((err) => {
   app.log.error(err);

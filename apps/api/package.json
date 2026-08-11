@@ -13,6 +13,7 @@
     "@fastify/cookie": "catalog:",
     "@ledgerline/authentication": "workspace:*",
     "@ledgerline/db": "workspace:*",
+    "@ledgerline/groups": "workspace:*",
     "@ledgerline/shared": "workspace:*",
     "dotenv": "^16.4.0",
     "fastify": "catalog:"
