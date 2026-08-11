@@ -14,7 +14,7 @@
     "@prisma/client": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "catalog:",
     "prisma": "^6.0.0"
   }
 }

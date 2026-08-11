@@ -4,6 +4,24 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@fastify/cookie':
+      specifier: 11.1.2
+      version: 11.1.2
+    '@types/node':
+      specifier: 22.20.1
+      version: 22.20.1
+    eslint:
+      specifier: 9.39.5
+      version: 9.39.5
+    fastify:
+      specifier: 5.11.3
+      version: 5.11.3
+    typescript:
+      specifier: 5.9.3
+      version: 5.9.3
+
 importers:
 
   .:
@@ -15,7 +33,7 @@ importers:
         specifier: ^8.0.0
         version: 8.66.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
       eslint:
-        specifier: ^9.0.0
+        specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)
       husky:
         specifier: ^9.0.0
@@ -27,13 +45,13 @@ importers:
         specifier: ^2.10.9
         version: 2.10.9
       typescript:
-        specifier: ^5.5.0
+        specifier: 'catalog:'
         version: 5.9.3
 
   apps/api:
     dependencies:
       '@fastify/cookie':
-        specifier: ^11.0.0
+        specifier: 'catalog:'
         version: 11.1.2
       '@ledgerline/authentication':
         specifier: workspace:*
@@ -48,11 +66,11 @@ importers:
         specifier: ^16.4.0
         version: 16.6.1
       fastify:
-        specifier: ^5.0.0
+        specifier: 'catalog:'
         version: 5.11.3
     devDependencies:
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 'catalog:'
         version: 22.20.1
       tsx:
         specifier: ^4.16.0
@@ -62,7 +80,7 @@ importers:
     dependencies:
       next:
         specifier: 16.3.0
-        version: 16.3.0(@babel/core@7.29.7)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 16.3.0(@babel/core@7.29.7)(@types/node@22.20.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -74,8 +92,8 @@ importers:
         specifier: ^4
         version: 4.3.3
       '@types/node':
-        specifier: ^20
-        version: 20.19.43
+        specifier: 'catalog:'
+        version: 22.20.1
       '@types/react':
         specifier: ^19
         version: 19.2.18
@@ -83,7 +101,7 @@ importers:
         specifier: ^19
         version: 19.2.4(@types/react@19.2.18)
       eslint:
-        specifier: ^9
+        specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)
       eslint-config-next:
         specifier: 16.3.0
@@ -92,13 +110,13 @@ importers:
         specifier: ^4
         version: 4.3.3
       typescript:
-        specifier: ^5
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/authentication:
     dependencies:
       '@fastify/cookie':
-        specifier: ^11.0.0
+        specifier: 'catalog:'
         version: 11.1.2
       '@ledgerline/db':
         specifier: workspace:*
@@ -114,10 +132,10 @@ importers:
         version: 5.1.0
     devDependencies:
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 'catalog:'
         version: 22.20.1
       fastify:
-        specifier: ^5.0.0
+        specifier: 'catalog:'
         version: 5.11.3
 
   packages/db:
@@ -127,7 +145,7 @@ importers:
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 'catalog:'
         version: 22.20.1
       prisma:
         specifier: ^6.0.0
@@ -143,13 +161,13 @@ importers:
         specifier: ^9.0.0
         version: 9.0.10
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 'catalog:'
         version: 22.20.1
 
   packages/shared:
     devDependencies:
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 'catalog:'
         version: 22.20.1
 
 packages:
@@ -922,9 +940,6 @@ packages:
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
-
-  '@types/node@20.19.43':
-    resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
   '@types/node@22.20.1':
     resolution: {integrity: sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==}
@@ -3328,10 +3343,6 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@20.19.43':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@22.20.1':
     dependencies:
       undici-types: 6.21.0
@@ -4718,7 +4729,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@16.3.0(@babel/core@7.29.7)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next@16.3.0(@babel/core@7.29.7)(@types/node@22.20.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@next/env': 16.3.0
       '@swc/helpers': 0.5.15
@@ -4737,7 +4748,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 16.3.0
       '@next/swc-win32-arm64-msvc': 16.3.0
       '@next/swc-win32-x64-msvc': 16.3.0
-      sharp: 0.35.3(@types/node@20.19.43)
+      sharp: 0.35.3(@types/node@22.20.1)
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/node'
@@ -5049,7 +5060,7 @@ snapshots:
       es-errors: 1.3.0
       es-object-atoms: 1.1.2
 
-  sharp@0.35.3(@types/node@20.19.43):
+  sharp@0.35.3(@types/node@22.20.1):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -5080,7 +5091,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.3
       '@img/sharp-win32-ia32': 0.35.3
       '@img/sharp-win32-x64': 0.35.3
-      '@types/node': 20.19.43
+      '@types/node': 22.20.1
     optional: true
 
   shebang-command@2.0.0:

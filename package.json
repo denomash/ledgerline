@@ -19,11 +19,11 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.0.0",
+    "eslint": "catalog:",
     "husky": "^9.0.0",
     "prettier": "^3.3.0",
     "turbo": "^2.10.9",
-    "typescript": "^5.5.0"
+    "typescript": "catalog:"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["@prisma/client", "@prisma/engines", "argon2", "esbuild", "prisma"]

@@ -10,15 +10,15 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@fastify/cookie": "^11.0.0",
+    "@fastify/cookie": "catalog:",
     "@ledgerline/authentication": "workspace:*",
     "@ledgerline/db": "workspace:*",
     "@ledgerline/shared": "workspace:*",
     "dotenv": "^16.4.0",
-    "fastify": "^5.0.0"
+    "fastify": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "catalog:",
     "tsx": "^4.16.0"
   }
 }
