@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@fastify/cookie": "catalog:",
+    "@fastify/cors": "^11.0.0",
     "@ledgerline/authentication": "workspace:*",
     "@ledgerline/db": "workspace:*",
     "@ledgerline/groups": "workspace:*",

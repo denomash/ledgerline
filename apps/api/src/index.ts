@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import type { FastifyError } from "fastify";
 import cookie from "@fastify/cookie";
+import cors from "@fastify/cors";
 import { authPlugin } from "@ledgerline/authentication";
 import { groupsPlugin } from "@ledgerline/groups";
 import { logger, statusCodeForError } from "@ledgerline/shared";
@@ -26,6 +27,7 @@ app.setErrorHandler((err: FastifyError, request, reply) => {
 
 app.get("/health", async () => ({ status: "ok" }));
 
+await app.register(cors, { origin: env.corsOrigin, credentials: true });
 await app.register(cookie);
 await app.register(authPlugin, { jwtSecret: env.jwtSecret, jwtExpiresIn: env.jwtExpiresIn });
 await app.register(groupsPlugin);
