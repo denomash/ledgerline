@@ -50,3 +50,32 @@ export async function joinGroup(groupId: string, userId: string): Promise<Member
     data: { status: "ACTIVE" },
   });
 }
+
+export async function listMyGroups(userId: string) {
+  const memberships = await prisma.membership.findMany({
+    where: { userId, status: "ACTIVE" },
+    include: { group: true },
+    orderBy: { joinedAt: "asc" },
+  });
+
+  return memberships.map((membership) => ({
+    id: membership.group.id,
+    name: membership.group.name,
+    role: membership.role,
+    joinedAt: membership.joinedAt,
+  }));
+}
+
+export function listMembers(groupId: string) {
+  return prisma.membership.findMany({
+    where: { groupId },
+    select: {
+      id: true,
+      role: true,
+      status: true,
+      joinedAt: true,
+      user: { select: { id: true, name: true, email: true, phone: true } },
+    },
+    orderBy: { joinedAt: "asc" },
+  });
+}
