@@ -1,9 +1,10 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import type { AuthUser } from "@/lib/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-export async function getCurrentUser(): Promise<AuthUser | null> {
+export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session");
   if (!sessionCookie) {
@@ -21,4 +22,4 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
   const body = (await response.json()) as { user: AuthUser };
   return body.user;
-}
+});

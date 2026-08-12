@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { AuthLayout } from "@/components/auth-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,7 +37,7 @@ export function LogInForm() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center p-4">
+    <AuthLayout>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Log in</CardTitle>
@@ -65,6 +66,6 @@ export function LogInForm() {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }
