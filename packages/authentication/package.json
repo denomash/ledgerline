@@ -12,6 +12,7 @@
     "@fastify/cookie": "catalog:",
     "@ledgerline/db": "workspace:*",
     "@ledgerline/jwt": "workspace:*",
+    "@ledgerline/shared": "workspace:*",
     "argon2": "^0.41.0",
     "fastify-plugin": "^5.0.0"
   },

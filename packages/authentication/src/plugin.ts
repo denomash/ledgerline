@@ -1,9 +1,12 @@
 import fp from "fastify-plugin";
-import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { prisma } from "@ledgerline/db";
 import { createJwtService } from "@ledgerline/jwt";
-import { EmailInUseError, InvalidCredentialsError, signIn, signUp, toPublicUser } from "./service.js";
+import { UnauthorizedError } from "@ledgerline/shared";
+import { signIn, signUp, toPublicUser } from "./service.js";
 import type { AuthPluginOptions } from "./types.js";
+
+const SOURCE = "AuthService";
 
 const signUpSchema = {
   body: {
@@ -34,16 +37,16 @@ const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (fastify, opts) 
   const jwtService = createJwtService({ secret: opts.jwtSecret, expiresIn: opts.jwtExpiresIn ?? "7d" });
   const cookieOptions = { httpOnly: true, sameSite: "lax" as const, path: "/" };
 
-  fastify.decorate("authenticate", async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.decorate("authenticate", async (request: FastifyRequest) => {
     const token = request.cookies[cookieName];
     if (!token) {
-      return reply.code(401).send({ error: "Unauthorized" });
+      throw new UnauthorizedError(SOURCE, "Unauthorized");
     }
     try {
       const payload = jwtService.verify(token);
       request.user = { id: payload.sub };
-    } catch {
-      return reply.code(401).send({ error: "Unauthorized" });
+    } catch (err) {
+      throw new UnauthorizedError(SOURCE, "Unauthorized", undefined, err);
     }
   });
 
@@ -51,16 +54,9 @@ const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (fastify, opts) 
     "/auth/signup",
     { schema: signUpSchema },
     async (request, reply) => {
-      try {
-        const { user, token } = await signUp(jwtService, request.body);
-        reply.setCookie(cookieName, token, cookieOptions);
-        return { user: toPublicUser(user) };
-      } catch (err) {
-        if (err instanceof EmailInUseError) {
-          return reply.code(409).send({ error: err.message });
-        }
-        throw err;
-      }
+      const { user, token } = await signUp(jwtService, request.body);
+      reply.setCookie(cookieName, token, cookieOptions);
+      return { user: toPublicUser(user) };
     },
   );
 
@@ -68,16 +64,9 @@ const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (fastify, opts) 
     "/auth/login",
     { schema: signInSchema },
     async (request, reply) => {
-      try {
-        const { user, token } = await signIn(jwtService, request.body);
-        reply.setCookie(cookieName, token, cookieOptions);
-        return { user: toPublicUser(user) };
-      } catch (err) {
-        if (err instanceof InvalidCredentialsError) {
-          return reply.code(401).send({ error: err.message });
-        }
-        throw err;
-      }
+      const { user, token } = await signIn(jwtService, request.body);
+      reply.setCookie(cookieName, token, cookieOptions);
+      return { user: toPublicUser(user) };
     },
   );
 

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ledgerline/db": "workspace:*",
+    "@ledgerline/shared": "workspace:*",
     "fastify-plugin": "^5.0.0"
   },
   "devDependencies": {

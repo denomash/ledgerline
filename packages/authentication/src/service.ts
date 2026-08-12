@@ -1,19 +1,10 @@
 import * as argon2 from "argon2";
 import { prisma, Prisma, type User } from "@ledgerline/db";
 import type { JwtService } from "@ledgerline/jwt";
+import { ConflictError, UnauthorizedError } from "@ledgerline/shared";
 import type { AuthResult, SignInInput, SignUpInput } from "./types.js";
 
-export class EmailInUseError extends Error {
-  constructor() {
-    super("Email is already in use");
-  }
-}
-
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super("Invalid email or password");
-  }
-}
+const SOURCE = "AuthService";
 
 export async function signUp(jwtService: JwtService, input: SignUpInput): Promise<AuthResult> {
   const passwordHash = await argon2.hash(input.password);
@@ -31,7 +22,7 @@ export async function signUp(jwtService: JwtService, input: SignUpInput): Promis
     })
     .catch((err) => {
       if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-        throw new EmailInUseError();
+        throw new ConflictError(SOURCE, "Email is already in use", { email: input.email }, err);
       }
       throw err;
     });
@@ -42,7 +33,7 @@ export async function signUp(jwtService: JwtService, input: SignUpInput): Promis
 export async function signIn(jwtService: JwtService, input: SignInInput): Promise<AuthResult> {
   const user = await prisma.user.findUnique({ where: { email: input.email } });
   if (!user || !(await argon2.verify(user.passwordHash, input.password))) {
-    throw new InvalidCredentialsError();
+    throw new UnauthorizedError(SOURCE, "Invalid email or password");
   }
 
   return { user, token: jwtService.sign({ sub: user.id }) };
