@@ -24,6 +24,7 @@ export async function Navbar() {
             </>
           ) : (
             <>
+              <ThemeToggle />
               <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
                 Log in
               </Link>
@@ -32,7 +33,6 @@ export async function Navbar() {
               </Link>
             </>
           )}
-          <ThemeToggle />
         </div>
       </div>
     </header>
