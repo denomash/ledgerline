@@ -19,6 +19,7 @@ export async function Navbar() {
         <div className="flex items-center gap-2">
           {user ? (
             <>
+              <ThemeToggle />
               <span className="hidden text-sm text-muted-foreground sm:inline">{user.name}</span>
               <LogoutButton />
             </>
