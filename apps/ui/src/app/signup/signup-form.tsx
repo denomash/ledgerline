@@ -1,11 +1,13 @@
 "use client";
 
+import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AuthLayout } from "@/components/auth-layout";
 import { PasswordInput } from "@/components/password-input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,6 +19,7 @@ export function SignUpForm() {
   const router = useRouter();
   const signUp = useSignUp();
   const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -45,7 +48,9 @@ export function SignUpForm() {
           router.refresh();
         },
         onError: (err) => {
-          toast.error(err instanceof ApiError ? err.message : "Something went wrong");
+          const message = err instanceof ApiError ? err.message : "Something went wrong";
+          toast.error(message);
+          setError(message);
         },
       },
     );
@@ -57,8 +62,14 @@ export function SignUpForm() {
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onChange={() => setError(null)}>
           <CardContent className="flex flex-col gap-4 pb-3">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             <div className="flex flex-col gap-2">
               <Label htmlFor="name">Name</Label>
               <Input id="name" name="name" required />
