@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { AuthLayout } from "@/components/auth-layout";
+import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,17 +16,26 @@ import { ApiError } from "@/lib/api";
 export function SignUpForm() {
   const router = useRouter();
   const signUp = useSignUp();
+  const [confirmError, setConfirmError] = useState<string | null>(null);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const phone = (formData.get("phone") as string).trim();
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+
+    if (password !== confirmPassword) {
+      setConfirmError("Passwords do not match");
+      return;
+    }
+    setConfirmError(null);
 
     signUp.mutate(
       {
         name: formData.get("name") as string,
         email: formData.get("email") as string,
-        password: formData.get("password") as string,
+        password,
         ...(phone && { phone }),
       },
       {
@@ -46,7 +57,7 @@ export function SignUpForm() {
           <CardTitle>Create an account</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 pb-3">
             <div className="flex flex-col gap-2">
               <Label htmlFor="name">Name</Label>
               <Input id="name" name="name" required />
@@ -61,10 +72,22 @@ export function SignUpForm() {
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" minLength={8} required />
+              <PasswordInput id="password" name="password" minLength={8} required />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="confirmPassword">Confirm password</Label>
+              <PasswordInput
+                id="confirmPassword"
+                name="confirmPassword"
+                minLength={8}
+                required
+                aria-invalid={confirmError ? true : undefined}
+                onChange={() => setConfirmError(null)}
+              />
+              {confirmError && <p className="text-sm text-destructive">{confirmError}</p>}
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col items-stretch gap-4">
+          <CardFooter className="flex flex-col items-stretch gap-4 pt-3">
             <Button type="submit" disabled={signUp.isPending}>
               {signUp.isPending ? "Creating account..." : "Sign up"}
             </Button>

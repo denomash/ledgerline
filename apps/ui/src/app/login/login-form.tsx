@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AuthLayout } from "@/components/auth-layout";
+import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -43,17 +44,17 @@ export function LogInForm() {
           <CardTitle>Log in</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 pb-3">
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" required />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <PasswordInput id="password" name="password" required />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col items-stretch gap-4">
+          <CardFooter className="flex flex-col items-stretch gap-4 pt-3">
             <Button type="submit" disabled={logIn.isPending}>
               {logIn.isPending ? "Logging in..." : "Log in"}
             </Button>
