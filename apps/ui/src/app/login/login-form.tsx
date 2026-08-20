@@ -1,10 +1,13 @@
 "use client";
 
+import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { AuthLayout } from "@/components/auth-layout";
 import { PasswordInput } from "@/components/password-input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +18,7 @@ import { ApiError } from "@/lib/api";
 export function LogInForm() {
   const router = useRouter();
   const logIn = useLogIn();
+  const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,9 +33,12 @@ export function LogInForm() {
         onSuccess: () => {
           toast.success("Logged in");
           router.push("/");
+          router.refresh();
         },
         onError: (err) => {
-          toast.error(err instanceof ApiError ? err.message : "Something went wrong");
+          const message = err instanceof ApiError ? err.message : "Something went wrong";
+          toast.error(message);
+          setError(message);
         },
       },
     );
@@ -45,13 +52,19 @@ export function LogInForm() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="flex flex-col gap-4 pb-3">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required />
+              <Input id="email" name="email" type="email" required onChange={() => setError(null)} />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
-              <PasswordInput id="password" name="password" required />
+              <PasswordInput id="password" name="password" required onChange={() => setError(null)} />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col items-stretch gap-4 pt-3">

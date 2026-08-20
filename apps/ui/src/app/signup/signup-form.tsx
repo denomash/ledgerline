@@ -42,6 +42,7 @@ export function SignUpForm() {
         onSuccess: () => {
           toast.success("Account created");
           router.push("/");
+          router.refresh();
         },
         onError: (err) => {
           toast.error(err instanceof ApiError ? err.message : "Something went wrong");
