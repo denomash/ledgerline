@@ -13,19 +13,32 @@ function colorise(message: string, color: Color): string {
   return `\x1b[${COLORS[color]}m${message}\x1b[39m`;
 }
 
+function extractStack(data: unknown): { stack?: string; rest: unknown } {
+  if (data && typeof data === "object" && "stack" in data && typeof (data as { stack?: unknown }).stack === "string") {
+    const { stack, ...rest } = data as { stack: string; [key: string]: unknown };
+    return { stack, rest: Object.keys(rest).length > 0 ? rest : undefined };
+  }
+  return { rest: data };
+}
+
 function log(level: LogLevel, source: string, message: string, data?: unknown): void {
+  const { stack, rest } = extractStack(data);
+
   const params: unknown[] = [
     colorise(level.toUpperCase(), level === "error" ? "red" : "green"),
     colorise(`[${new Date().toISOString()}]`, "magenta"),
     colorise(`(${source})`, "blue"),
     colorise(message, "cyan"),
   ];
-  if (data !== undefined) {
-    params.push(typeof data === "object" ? JSON.stringify(data) : data);
+  if (rest !== undefined) {
+    params.push(typeof rest === "object" ? JSON.stringify(rest) : rest);
   }
 
   if (level === "error") {
     console.error(...params);
+    if (stack) {
+      console.error(colorise(stack, "red"));
+    }
   } else if (level === "warn") {
     console.warn(...params);
   } else {

@@ -7,7 +7,7 @@ import { groupsPlugin } from "@ledgerline/groups";
 import { logger, statusCodeForError } from "@ledgerline/shared";
 import { env } from "./config/env.js";
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: false });
 
 app.addHook("onRoute", (routeOptions) => {
   if (routeOptions.method === "HEAD") {
@@ -16,10 +16,17 @@ app.addHook("onRoute", (routeOptions) => {
   logger.info("API", "REST Route", { method: routeOptions.method, path: routeOptions.path });
 });
 
+app.addHook("onResponse", async (request, reply) => {
+  logger.info("API", `${request.method} ${request.url}`, {
+    statusCode: reply.statusCode,
+    responseTime: `${reply.elapsedTime.toFixed(1)}ms`,
+  });
+});
+
 app.setErrorHandler((err: FastifyError, request, reply) => {
   const statusCode = statusCodeForError(err);
   if (statusCode >= 500) {
-    request.log.error(err);
+    logger.error("API", err.message, { method: request.method, url: request.url, stack: err.stack });
     return reply.code(statusCode).send({ error: "Internal Server Error" });
   }
   return reply.code(statusCode).send({ error: err.message });
@@ -32,7 +39,12 @@ await app.register(cookie);
 await app.register(authPlugin, { jwtSecret: env.jwtSecret, jwtExpiresIn: env.jwtExpiresIn });
 await app.register(groupsPlugin);
 
-app.listen({ port: env.port, host: "0.0.0.0" }).catch((err) => {
-  app.log.error(err);
-  process.exit(1);
-});
+app
+  .listen({ port: env.port, host: "0.0.0.0" })
+  .then((address) => {
+    logger.info("API", "Server listening", { address });
+  })
+  .catch((err) => {
+    logger.error("API", "Failed to start server", { stack: (err as Error).stack });
+    process.exit(1);
+  });
