@@ -1,25 +1,5 @@
 import { apiFetch } from "@/lib/api";
-
-export interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface SignUpInput {
-  name: string;
-  email: string;
-  phone?: string;
-  password: string;
-}
-
-export interface LogInInput {
-  email: string;
-  password: string;
-}
+import type { AuthUser, LogInInput, SignUpInput } from "@/models/authInterface";
 
 export function signUp(input: SignUpInput) {
   return apiFetch<{ user: AuthUser }>("/auth/signup", {

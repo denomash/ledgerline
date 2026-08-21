@@ -20,6 +20,9 @@ export async function Navbar() {
           {user ? (
             <>
               <ThemeToggle />
+              <Link href="/groups" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
+                Groups
+              </Link>
               <span className="hidden text-sm text-muted-foreground sm:inline">{user.name}</span>
               <LogoutButton />
             </>

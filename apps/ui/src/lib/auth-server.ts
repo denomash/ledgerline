@@ -1,8 +1,7 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
-import type { AuthUser } from "@/lib/auth";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+import type { AuthUser } from "@/models/authInterface";
+import { API_URL } from "@/lib/env";
 
 export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
   const cookieStore = await cookies();
